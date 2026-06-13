@@ -1,0 +1,16 @@
+body{
+    background:#f4f7fc;
+}
+
+.card{
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+    border:none;
+}
+
+h1{
+    font-weight:700;
+}
+
+.table{
+    background:white;
+}
