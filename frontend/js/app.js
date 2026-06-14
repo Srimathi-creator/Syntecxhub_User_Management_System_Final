@@ -8,6 +8,9 @@ const userForm = document.getElementById("userForm");
 
 let editId = null;
 
+const submitBtn = document.getElementById("submitBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+
 // Load Users
 async function loadUsers() {
   try {
@@ -72,15 +75,28 @@ userForm.addEventListener("submit", async (e) => {
       });
 
       editId = null;
+
+      submitBtn.textContent = "Add User";
+      submitBtn.classList.remove("btn-success");
+      submitBtn.classList.add("btn-primary");
+
+      cancelBtn.style.display = "none";
     } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: authHeader,
-        },
-        body: JSON.stringify(user),
-      });
+      const response = await fetch(API_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: authHeader,
+  },
+  body: JSON.stringify(user),
+});
+
+const data = await response.json();
+
+if (!response.ok) {
+  alert(data.message);
+  return;
+}
     }
 
     userForm.reset();
@@ -119,7 +135,26 @@ function editUser(id, name, email, age) {
   document.getElementById("age").value = age;
 
   editId = id;
+
+  submitBtn.textContent = "Save Changes";
+  submitBtn.classList.remove("btn-primary");
+  submitBtn.classList.add("btn-success");
+
+  cancelBtn.style.display = "inline-block";
 }
+
+// Cancel Edit
+cancelBtn.addEventListener("click", () => {
+  userForm.reset();
+
+  editId = null;
+
+  submitBtn.textContent = "Add User";
+  submitBtn.classList.remove("btn-success");
+  submitBtn.classList.add("btn-primary");
+
+  cancelBtn.style.display = "none";
+});
 
 // Initial Load
 loadUsers();
